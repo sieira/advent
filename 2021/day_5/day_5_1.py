@@ -16,6 +16,23 @@ class Segment:
     start: Coordinates
     end: Coordinates
 
+    @property
+    def path(self) -> list[Coordinates]:
+        start, end = self.start, self.end
+        delta_x = abs(end.x - start.x)
+        delta_y = abs(end.y - start.y)
+
+        # Uncomment for part 1
+        # if delta_x != 0 and delta_y != 0:
+        #   return []
+
+        n_steps = max(delta_x + 1, delta_y + 1)
+
+        x_path = numpy.round(numpy.linspace(start.x, end.x, n_steps)).astype(numpy.int32)
+        y_path = numpy.round(numpy.linspace(start.y, end.y, n_steps)).astype(numpy.int32)
+
+        return [Coordinates(*coord) for coord in zip(x_path, y_path)]
+
 
 class PathMap:
     def __init__(self) -> None:
@@ -60,23 +77,6 @@ def parse_file(file_name: str) -> set[Segment]:
         return segments
 
 
-def get_segment_path(segment: Segment) -> list[Coordinates]:
-    start, end = segment.start, segment.end
-    delta_x = abs(end.x - start.x)
-    delta_y = abs(end.y - start.y)
-
-    # Uncomment for part 1
-    # if delta_x != 0 and delta_y != 0:
-    #   return []
-
-    n_steps = max(delta_x + 1, delta_y + 1)
-
-    x_path = numpy.round(numpy.linspace(start.x, end.x, n_steps)).astype(numpy.int32)
-    y_path = numpy.round(numpy.linspace(start.y, end.y, n_steps)).astype(numpy.int32)
-
-    return [Coordinates(*coord) for coord in zip(x_path, y_path)]
-
-
 def run() -> None:
     total_overlaps = 0
     path_map = PathMap()
@@ -86,7 +86,7 @@ def run() -> None:
     args = parser.parse_args()
     segments = parse_file(args.file_name)
     for segment in segments:
-        for point in get_segment_path(segment):
+        for point in segment.path:
             if path_map.hit(point) == 2:
                 total_overlaps += 1
         # print(segment)
