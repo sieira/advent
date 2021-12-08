@@ -1,5 +1,5 @@
 import argparse
-from typing import Union
+from typing import Union, Generator
 
 SignalPattern = str
 DisplaySignalPatterns = list[SignalPattern]
@@ -137,14 +137,11 @@ def guess_signals(display_signal_patterns: DisplaySignalPatterns) -> SignalMappe
     return signal_mapper
 
 
-def parse_file(file_name: str) -> list[DisplayInfo]:
-    display_info = []
-
+def parse_file(file_name: str) -> Generator[DisplayInfo, None, None]:
     with open(file_name, encoding='utf-8') as input_file:
         for display in input_file.read().splitlines():
             display_signal_patterns, display_output_digits = display.split(' | ')
-            display_info.append((display_signal_patterns.split(), display_output_digits.split()))
-    return display_info
+            yield display_signal_patterns.split(), display_output_digits.split()
 
 
 def run() -> None:
