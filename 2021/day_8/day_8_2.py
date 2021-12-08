@@ -52,7 +52,7 @@ class SignalMapper:
             'g': set('abcdefg'),
         }
 
-    def map_segments_to(self, segments: SignalPattern, pattern: SignalPattern):
+    def map_segments_to(self, segments: set[str], pattern: SignalPattern):
         """Makes it so the given segments can only be one of the signals in the given pattern"""
         for segment in segments:
             # Do not add what has been discarded
@@ -67,7 +67,7 @@ class SignalMapper:
         for segment in segments:
             self.possible_mapping[segment] = self.possible_mapping[segment].difference(pattern)
 
-    def get_possible_pattern(self, num):
+    def get_possible_pattern(self, num: int) -> SignalPattern:
         """Return all the segments that with the current information COULD be part of the number"""
         mapped_segments = set()
         for real_segment in NUMBER_SEGMENTS[num]:
